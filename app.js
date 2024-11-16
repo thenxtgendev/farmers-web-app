@@ -1,3 +1,5 @@
+console.log("app.js loaded successfully");
+
 let cart = [];
 
 // Function to handle adding products to the cart
