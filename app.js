@@ -34,6 +34,25 @@ async function fetchProducts(query) {
     ].filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
 }
 
+// Function to fetch products by category
+function fetchProductsByCategory(category) {
+    alert(`Fetching products for category: ${category}`);
+
+    // Placeholder for fetching products from Salesforce API
+    const products = [
+        { name: "Organic Seeds", price: "$20", quantity: 50, category: "seeds" },
+        { name: "Fertilizer A", price: "$15", quantity: 30, category: "fertilizers" },
+        { name: "Pesticide B", price: "$12", quantity: 75, category: "pesticides" },
+        { name: "Herbicide C", price: "$10", quantity: 40, category: "herbicides" },
+        { name: "Livestock Feed D", price: "$25", quantity: 20, category: "livestock feed" },
+        { name: "Farm Machinery E", price: "$1000", quantity: 5, category: "farm machinery" }
+    ];
+
+    // Filter products by the selected category
+    const filteredProducts = products.filter(product => product.category === category);
+    displayProducts(filteredProducts);
+}
+
 // Placeholder function to fetch orders
 async function fetchOrders(query) {
     // Example orders data
