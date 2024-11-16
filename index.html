@@ -7,10 +7,11 @@
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         #search-results, #categories, #cart-section { margin-top: 20px; }
-        table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+        table { width: 48%; margin-top: 10px; border-collapse: collapse; margin-right: 2%; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .card { border: 1px solid #ddd; padding: 10px; margin: 10px; cursor: pointer; }
+        .card { border: 1px solid #ddd; padding: 10px; margin: 10px; cursor: pointer; display: inline-block; }
         .hidden { display: none; }
+        .flex-container { display: flex; flex-wrap: wrap; }
     </style>
 </head>
 <body>
@@ -22,7 +23,7 @@
     <!-- Search Results -->
     <div id="search-results" class="hidden">
         <h2>Search Results</h2>
-        <div style="display: flex;">
+        <div style="display: flex; justify-content: space-between;">
             <!-- Product Results Table -->
             <table id="product-results">
                 <thead>
@@ -30,6 +31,7 @@
                 </thead>
                 <tbody></tbody>
             </table>
+
             <!-- Order Results Table -->
             <table id="order-results">
                 <thead>
@@ -43,7 +45,7 @@
     <!-- Categories Section -->
     <div id="categories">
         <h2>Choose your product from the below categories</h2>
-        <div id="category-cards">
+        <div id="category-cards" class="flex-container">
             <div class="card" onclick="fetchProductsByCategory('seeds')">Seeds</div>
             <div class="card" onclick="fetchProductsByCategory('fertilizers')">Fertilizers</div>
             <div class="card" onclick="fetchProductsByCategory('pesticides')">Pesticides</div>
