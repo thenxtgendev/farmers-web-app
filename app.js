@@ -24,15 +24,33 @@ async function fetchSearchResults(query) {
     displayOrders(orders);
 }
 
-// Placeholder function to fetch products
+// Update the Salesforce access token here
+const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQAvg8VwHtG6w8Owhm2u3Nd.2s8_XfgQTidAVSp_P08OhsYUuoVkdSeVS5qlPupJRvjhoTlXwo05lUxeKJ8m1majOLETY  ';
+
+// Fetch products from Salesforce API
 async function fetchProducts(query) {
-    // Example products data
-    return [
-        { name: "Organic Seeds", price: "$20", quantity: 50 },
-        { name: "Pesticides", price: "$15", quantity: 100 },
-        { name: "Herbicide", price: "$12", quantity: 75 }
-    ].filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
+    try {
+        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Filter products based on the query
+            return data.products.filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
+        } else {
+            console.error('Failed to fetch products:', response.statusText);
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return [];
+    }
 }
+
 
 // Function to fetch products by category
 function fetchProductsByCategory(category) {
@@ -154,7 +172,7 @@ function removeFromCart(index) {
     updateCartDisplay();
 }
 
-// Function to process the order
+// Function to process the order using Salesforce API
 async function processOrder() {
     if (cart.length === 0) {
         alert('Cart is empty!');
@@ -162,10 +180,12 @@ async function processOrder() {
     }
 
     try {
-        // Placeholder for Salesforce API call
-        const response = await fetch('https://your-salesforce-endpoint.com/processOrder', {
+        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ACCESS_TOKEN}`
+            },
             body: JSON.stringify({ items: cart })
         });
 
@@ -182,3 +202,5 @@ async function processOrder() {
         alert('An error occurred while placing the order.');
     }
 }
+
+
