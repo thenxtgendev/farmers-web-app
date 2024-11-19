@@ -15,31 +15,27 @@
     </style>
 </head>
 <body>
+    <!-- Navigation Buttons -->
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <button onclick="viewOrders()">Orders</button>
+        <button onclick="logOut()">Log Out</button>
+    </div>
+
     <h1>Farmer's Web App</h1>
 
     <!-- Search Bar -->
-    <input type="text" id="search-bar" placeholder="Search products or orders..." oninput="handleSearch()" />
+    <input type="text" id="search-bar" placeholder="Search products..." oninput="handleSearch()" />
+
 
     <!-- Search Results -->
     <div id="search-results" class="hidden">
         <h2>Search Results</h2>
-        <div style="display: flex; justify-content: space-between;">
-            <!-- Updated Product Results Table -->
-            <table id="product-results">
-                <thead>
-                    <tr><th>Product Name</th><th>Price</th><th>Quantity</th><th>Action</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <!-- Order Results Table -->
-            <table id="order-results">
-                <thead>
-                    <tr><th>Order ID</th><th>Product</th><th>Quantity</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+        <table id="product-results">
+            <thead>
+                <tr><th>Product Name</th><th>Price</th><th>Quantity</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
     <!-- Categories Section -->

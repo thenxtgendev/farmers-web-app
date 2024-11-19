@@ -10,18 +10,15 @@ function handleSearch() {
     if (query.length >= 3) {
         fetchSearchResults(query);
     } else {
-        clearResults();
+        clearProductResults();
     }
 }
 
-// Function to fetch search results (Simulated for now)
+// Function to fetch product search results
 async function fetchSearchResults(query) {
     document.getElementById('search-results').classList.remove('hidden');
     const products = await fetchProducts(query);
     displayProducts(products);
-
-    const orders = await fetchOrders(query);
-    displayOrders(orders);
 }
 
 // Update the Salesforce access token here
@@ -117,11 +114,10 @@ function displayOrders(orders) {
     });
 }
 
-// Function to clear search results
-function clearResults() {
+// Function to clear product search results
+function clearProductResults() {
     document.getElementById('search-results').classList.add('hidden');
     document.getElementById('product-results').querySelector('tbody').innerHTML = "";
-    document.getElementById('order-results').querySelector('tbody').innerHTML = "";
 }
 
 // Function to handle adding products to the cart
@@ -214,3 +210,12 @@ async function processOrder() {
     }
 }
 
+// Function to handle "Orders" button click
+function viewOrders() {
+    alert('Orders functionality coming soon!');
+}
+
+// Function to handle "Log Out" button click
+function logOut() {
+    alert('Log out functionality coming soon!');
+}
