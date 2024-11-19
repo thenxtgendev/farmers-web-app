@@ -1,0 +1,12 @@
+div[style*="background-color"] {
+    font-size: 18px;
+}
+
+input[type="text"] {
+    text-align: center;
+}
+
+.card:hover {
+    background-color: #f9f9f9;
+    transform: scale(1.05);
+}

@@ -15,39 +15,45 @@
     </style>
 </head>
 <body>
-    <!-- Navigation Buttons -->
-    <div style="position: absolute; top: 10px; right: 10px;">
-        <button onclick="viewOrders()">Orders</button>
-        <button onclick="logOut()">Log Out</button>
+    <!-- Navigation Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f4f4f4; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
+        <h1 style="margin: 0;">Farmer's Web App</h1>
+        <div>
+            <button onclick="viewOrders()" style="margin-right: 10px;">Orders</button>
+            <button onclick="logOut()">Log Out</button>
+        </div>
     </div>
 
-    <h1>Farmer's Web App</h1>
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 30px;">
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" placeholder="Search products..." oninput="handleSearch()" style="margin-bottom: 20px; width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
 
-    <!-- Search Bar -->
-    <input type="text" id="search-bar" placeholder="Search products..." oninput="handleSearch()" />
+        <!-- Search Results -->
+        <div id="search-results" class="hidden">
+            <h2>Search Results</h2>
+            <table id="product-results" style="margin-top: 10px; width: 100%; max-width: 600px; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Product Name</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Price</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
-
-    <!-- Search Results -->
-    <div id="search-results" class="hidden">
-        <h2>Search Results</h2>
-        <table id="product-results">
-            <thead>
-                <tr><th>Product Name</th><th>Price</th><th>Quantity</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Categories Section -->
-    <div id="categories">
-        <h2>Choose your product from the below categories</h2>
-        <div id="category-cards" class="flex-container">
-            <div class="card" onclick="fetchProductsByCategory('seeds')">Seeds</div>
-            <div class="card" onclick="fetchProductsByCategory('fertilizers')">Fertilizers</div>
-            <div class="card" onclick="fetchProductsByCategory('pesticides')">Pesticides</div>
-            <div class="card" onclick="fetchProductsByCategory('herbicides')">Herbicides</div>
-            <div class="card" onclick="fetchProductsByCategory('livestock feed')">Livestock Feed</div>
-            <div class="card" onclick="fetchProductsByCategory('farm machinery')">Farm Machinery</div>
+        <!-- Categories Section -->
+        <div id="categories" style="margin-top: 40px;">
+            <h2 style="text-align: center;">Choose your product from the below categories</h2>
+            <div id="category-cards" class="flex-container" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+                <div class="card" onclick="fetchProductsByCategory('seeds')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Seeds</div>
+                <div class="card" onclick="fetchProductsByCategory('fertilizers')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Fertilizers</div>
+                <div class="card" onclick="fetchProductsByCategory('pesticides')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Pesticides</div>
+                <div class="card" onclick="fetchProductsByCategory('herbicides')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Herbicides</div>
+                <div class="card" onclick="fetchProductsByCategory('livestock feed')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Livestock Feed</div>
+                <div class="card" onclick="fetchProductsByCategory('farm machinery')" style="border: 1px solid #ddd; padding: 10px; cursor: pointer; border-radius: 5px; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">Farm Machinery</div>
+            </div>
         </div>
     </div>
 
