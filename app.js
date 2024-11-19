@@ -30,7 +30,7 @@ const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQAvg8VwHtG6w8Owhm2u3Nd.2s8_XfgQTidAVSp
 // Fetch products from Salesforce API
 async function fetchProducts(query) {
     try {
-        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products', {
+        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(query), {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${ACCESS_TOKEN}`
@@ -39,8 +39,12 @@ async function fetchProducts(query) {
 
         if (response.ok) {
             const data = await response.json();
-            // Filter products based on the query
-            return data.products.filter(product => product.name.toLowerCase().includes(query.toLowerCase()));
+            // Map the fields to display the updated structure
+            return data.map(product => ({
+                name: product.Product_Name__c,
+                price: product.Price__c,
+                quantity: product.Quantity__c
+            }));
         } else {
             console.error('Failed to fetch products:', response.statusText);
             return [];
@@ -186,15 +190,22 @@ async function processOrder() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${ACCESS_TOKEN}`
             },
-            body: JSON.stringify({ items: cart })
+            body: JSON.stringify({
+                items: cart.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity.toString(),
+                    price: item.price.toString()
+                }))
+            })
         });
 
         if (response.ok) {
             const result = await response.json();
-            alert(`Order placed successfully! Order ID: ${result.orderId}`);
+            alert(`Order placed successfully!`);
             cart = []; // Clear the cart after a successful order
             updateCartDisplay();
         } else {
+            console.error('Failed to process order:', response.statusText);
             alert('Failed to process order. Please try again.');
         }
     } catch (error) {
@@ -202,5 +213,4 @@ async function processOrder() {
         alert('An error occurred while placing the order.');
     }
 }
-
 
