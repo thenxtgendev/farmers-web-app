@@ -38,7 +38,9 @@ async function fetchProducts(query) {
             const data = await response.json();
             // Map the fields to display the updated structure
             return data.map(product => ({
+                id: product.Name,
                 name: product.Product_Name__c,
+                category: product.Category__c,
                 price: product.Price__c,
                 quantity: product.Quantity__c
             }));
@@ -90,11 +92,12 @@ function displayProducts(products) {
     products.forEach(product => {
         const row = document.createElement('tr');
         row.innerHTML = `
+            <td>${product.id}</td>
             <td>${product.name}</td>
+            <td>${product.category}</td>
             <td>${product.price}</td>
-            <td>${product.quantity}</td>
             <td>
-                <input type="number" id="quantity-${product.name}" min="1" value="1">
+                <input type="number" id="quantity-${product.name}" min="1" value="${product.quantity}">
             </td>
             <td><button onclick="addToCart('${product.name}', '${product.price}')">Add to Cart</button></td>
         `;
