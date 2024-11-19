@@ -54,24 +54,57 @@ async function fetchProducts(query) {
     }
 }
 
+// Function to display products filtered by category
+function displayCategoryProducts(products) {
+    const categoryTableBody = document.getElementById('category-results').querySelector('tbody');
+    categoryTableBody.innerHTML = ""; // Clear existing results
 
-// Function to fetch products by category
-function fetchProductsByCategory(category) {
-    alert(`Fetching products for category: ${category}`);
+    products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.category}</td>
+            <td>${product.price}</td>
+            <td>
+                <input type="number" id="quantity-${product.name}" min="1" value="${product.quantity}">
+            </td>
+            <td><button onclick="addToCart('${product.name}', '${product.price}')">Add to Cart</button></td>
+        `;
+        categoryTableBody.appendChild(row);
+    });
 
-    // Placeholder for fetching products from Salesforce API
-    const products = [
-        { name: "Organic Seeds", price: "$20", quantity: 50, category: "seeds" },
-        { name: "Fertilizer A", price: "$15", quantity: 30, category: "fertilizers" },
-        { name: "Pesticide B", price: "$12", quantity: 75, category: "pesticides" },
-        { name: "Herbicide C", price: "$10", quantity: 40, category: "herbicides" },
-        { name: "Livestock Feed D", price: "$25", quantity: 20, category: "livestock feed" },
-        { name: "Farm Machinery E", price: "$1000", quantity: 5, category: "farm machinery" }
-    ];
+    // Make the table visible
+    document.getElementById('category-results').classList.remove('hidden');
+}
 
-    // Filter products by the selected category
-    const filteredProducts = products.filter(product => product.category === category);
-    displayProducts(filteredProducts);
+// Function to fetch products by category from Salesforce API
+async function fetchProductsByCategory(category) {
+    try {
+        const response = await fetch('https://your-instance.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(category), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Map the fields to display the updated structure
+            const filteredProducts = data.map(product => ({
+                id: product.Name,
+                name: product.Product_Name__c,
+                category: product.Category__c,
+                price: product.Price__c,
+                quantity: product.Quantity__c
+            }));
+            displayCategoryProducts(filteredProducts); // Pass data to display function
+        } else {
+            console.error('Failed to fetch products by category:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching products by category:', error);
+    }
 }
 
 // Placeholder function to fetch orders
