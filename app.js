@@ -81,7 +81,7 @@ function displayCategoryProducts(products) {
 // Function to fetch products by category from Salesforce API
 async function fetchProductsByCategory(category) {
     try {
-        const response = await fetch('https://your-instance.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(category), {
+        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(category), {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${ACCESS_TOKEN}`
