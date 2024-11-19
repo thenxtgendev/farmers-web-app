@@ -25,7 +25,7 @@ async function fetchSearchResults(query) {
 }
 
 // Update the Salesforce access token here
-const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQAvg8VwHtG6w8Owhm2u3Nd.2s8_XfgQTidAVSp_P08OhsYUuoVkdSeVS5qlPupJRvjhoTlXwo05lUxeKJ8m1majOLETY  ';
+const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQELCUzori11XAXRHxYNqN5U60FEOwu5SlhwxZAbs9W.kB00H6a47ktf9FEe9z0x8txLP1T_wKzRGxQUatKzqTjLJ.dUC';
 
 // Fetch products from Salesforce API
 async function fetchProducts(query) {
