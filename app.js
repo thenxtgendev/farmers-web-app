@@ -259,7 +259,11 @@ async function fetchOrders() {
             const data = JSON.parse(rawData); // Parse the response into JSON
             console.log("Parsed Orders Data:", data);
 
-            displayOrders(data); // Pass the parsed data to the display function
+            if (Array.isArray(data)) {
+                displayOrders(data); // Pass the parsed data to the display function
+            } else {
+                console.error("Error: Fetched data is not an array", data);
+            }
         } else {
             console.error('Failed to fetch orders:', response.statusText);
         }
@@ -272,6 +276,12 @@ async function fetchOrders() {
 function displayOrders(orders) {
     const ordersContainer = document.getElementById('orders-container');
     ordersContainer.innerHTML = ""; // Clear existing orders
+
+    // Check if orders is an array
+    if (!Array.isArray(orders)) {
+        console.error("displayOrders expects an array but got:", orders);
+        return;
+    }
 
     orders.forEach(order => {
         // Calculate the total price for the order
