@@ -107,16 +107,6 @@ async function fetchProductsByCategory(category) {
     }
 }
 
-// Placeholder function to fetch orders
-async function fetchOrders(query) {
-    // Example orders data
-    return [
-        { orderId: "ORD001", product: "Organic Seeds", quantity: 10 },
-        { orderId: "ORD002", product: "Pesticides", quantity: 5 },
-        { orderId: "ORD003", product: "Herbicide", quantity: 8 }
-    ].filter(order => order.product.toLowerCase().includes(query.toLowerCase()));
-}
-
 // Function to display product results
 function displayProducts(products) {
     const productTableBody = document.getElementById('product-results').querySelector('tbody');
@@ -250,4 +240,71 @@ function viewOrders() {
 // Function to handle "Log Out" button click
 function logOut() {
     alert('Log out functionality coming soon!');
+}
+
+// Fetch orders and their line items from Salesforce
+async function fetchOrders() {
+    try {
+        const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            displayOrders(data); // Pass the data to the display function
+        } else {
+            console.error('Failed to fetch orders:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+    }
+}
+
+// Function to display orders as cards
+function displayOrders(orders) {
+    const ordersContainer = document.getElementById('orders-container');
+    ordersContainer.innerHTML = ""; // Clear existing orders
+
+    orders.forEach(order => {
+        // Calculate the total price for the order
+        let totalPrice = 0;
+        const lineItemsHTML = order.lineItems.map(item => {
+            const productTotal = parseFloat(item.price) * parseInt(item.quantity);
+            totalPrice += productTotal;
+
+            return `
+                <div style="font-size: 14px; margin-bottom: 5px;">
+                    ${item.name} x${item.quantity} - ₹${productTotal.toFixed(2)}
+                </div>
+            `;
+        }).join("");
+
+        // Create the order card
+        const orderCard = document.createElement('div');
+        orderCard.style = `
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            width: 250px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        `;
+        orderCard.innerHTML = `
+            <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                Order #: ${order.orderNumber}
+            </div>
+            <div>${lineItemsHTML}</div>
+            <div style="font-size: 16px; font-weight: bold; margin-top: 10px; text-align: right;">
+                Total: ₹${totalPrice.toFixed(2)}
+            </div>
+        `;
+
+        ordersContainer.appendChild(orderCard);
+    });
+
+    // Make the orders section visible
+    document.getElementById('orders-section').classList.remove('hidden');
 }
