@@ -253,8 +253,13 @@ async function fetchOrders() {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            displayOrders(data); // Pass the data to the display function
+            const rawData = await response.text(); // Get the raw response
+            console.log("Raw Orders Response:", rawData);
+
+            const data = JSON.parse(rawData); // Parse the response into JSON
+            console.log("Parsed Orders Data:", data);
+
+            displayOrders(data); // Pass the parsed data to the display function
         } else {
             console.error('Failed to fetch orders:', response.statusText);
         }
