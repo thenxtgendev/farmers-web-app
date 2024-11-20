@@ -253,16 +253,29 @@ async function fetchOrders() {
         });
 
         if (response.ok) {
-            const rawData = await response.text(); // Get the raw response
+            const rawData = await response.text();
             console.log("Raw Orders Response:", rawData);
 
-            const data = JSON.parse(rawData); // Parse the response into JSON
+            let data = JSON.parse(rawData);
+            console.log("Type of data:", typeof data);
             console.log("Parsed Orders Data:", data);
+
+            // Ensure data is an array
+            if (!Array.isArray(data)) {
+                console.error("Fetched data is not an array", data);
+
+                // Handle cases where the array might be wrapped or stringified
+                if (typeof data === "string") {
+                    data = JSON.parse(data); // Parse again if it's a string
+                } else if (data.orders) {
+                    data = data.orders; // Unwrap if it's wrapped in an object
+                }
+            }
 
             if (Array.isArray(data)) {
                 displayOrders(data); // Pass the parsed data to the display function
             } else {
-                console.error("Error: Fetched data is not an array", data);
+                console.error("Data is still not an array after parsing/unwrapping:", data);
             }
         } else {
             console.error('Failed to fetch orders:', response.statusText);
