@@ -216,24 +216,19 @@ async function processOrder() {
     }
 
     try {
+        // POST request to Salesforce
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${ACCESS_TOKEN}`
             },
-            body: JSON.stringify({
-                items: cart.map(item => ({
-                    name: item.name,
-                    quantity: item.quantity.toString(),
-                    price: item.price.toString()
-                }))
-            })
+            body: JSON.stringify({ items: cart }) // Send the cart data as JSON
         });
 
         if (response.ok) {
             const result = await response.json();
-            alert(`Order placed successfully!`);
+            alert(`Order placed successfully! Order ID: ${result.orderId}`);
             cart = []; // Clear the cart after a successful order
             updateCartDisplay();
         } else {
@@ -245,6 +240,7 @@ async function processOrder() {
         alert('An error occurred while placing the order.');
     }
 }
+
 
 // Function to handle "Orders" button click
 function viewOrders() {
