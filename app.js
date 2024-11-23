@@ -259,7 +259,7 @@ async function fetchOrders() {
 
             // Ensure data is an array
             if (!Array.isArray(data)) {
-                console.error("Fetched data is not an array", data);
+                //console.error("Fetched data is not an array", data);
 
                 // Handle cases where the array might be wrapped or stringified
                 if (typeof data === "string") {
