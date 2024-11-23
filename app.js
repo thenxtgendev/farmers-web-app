@@ -1,4 +1,5 @@
 console.log("app.js loaded successfully");
+window.ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQM4eL3.ojdbvG_fTrkeEdmbJUGmjj7.hk_VTiU87Qo817krBqH616sv.dfAgZbBnCgpQV0Ccq5uH3f_olFIPmwR8IbQG';
 
 let cart = [];
 
@@ -21,8 +22,7 @@ async function fetchSearchResults(query) {
     displayProducts(products);
 }
 
-//Salesforce access token
-const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQM4eL3.ojdbvG_fTrkeEdmbJUGmjj7.hk_VTiU87Qo817krBqH616sv.dfAgZbBnCgpQV0Ccq5uH3f_olFIPmwR8IbQG';
+
 
 // Fetch products from Salesforce API
 async function fetchProducts(query) {
@@ -30,7 +30,7 @@ async function fetchProducts(query) {
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(query), {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`
+                'Authorization': `Bearer ${window.ACCESS_TOKEN}`
             }
         });
 
@@ -58,7 +58,7 @@ async function fetchProducts(query) {
 // Function to display products filtered by category
 function displayCategoryProducts(products) {
     const categoryTableBody = document.getElementById('category-results').querySelector('tbody');
-    categoryTableBody.innerHTML = ""; // Clear existing results
+    categoryTableBody.innerHTML = "";
 
     products.forEach(product => {
         const row = document.createElement('tr');
@@ -75,7 +75,6 @@ function displayCategoryProducts(products) {
         categoryTableBody.appendChild(row);
     });
 
-    // Make the table visible
     document.getElementById('category-results').classList.remove('hidden');
 }
 
@@ -85,14 +84,13 @@ async function fetchProductsByCategory(category) {
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/products?query=' + encodeURIComponent(category), {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`
+                'Authorization': `Bearer ${window.ACCESS_TOKEN}`
             }
         });
 
         if (response.ok) {
             const data = await response.json();
             console.log('RESPONSE FROM SALESFORCE'+ JSON.stringify(data));
-            // Map the fields to display the updated structure
             const filteredProducts = data.map(product => ({
                 id: product.Name,
                 name: product.Product_Name__c,
@@ -100,7 +98,7 @@ async function fetchProductsByCategory(category) {
                 price: product.Price__c,
                 quantity: product.Quantity__c
             }));
-            displayCategoryProducts(filteredProducts); // Pass data to display function
+            displayCategoryProducts(filteredProducts);
         } else {
             console.error('Failed to fetch products by category:', response.statusText);
         }
@@ -208,21 +206,20 @@ async function processOrder() {
     }
 
     try {
-        // POST request to Salesforce
         console.log('REQUEST FROM APP CART'+JSON.stringify({ items: cart }));
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${ACCESS_TOKEN}`
+                'Authorization': `Bearer ${window.ACCESS_TOKEN}`
             },
-            body: JSON.stringify({ items: cart }) // Send the cart data as JSON
+            body: JSON.stringify({ items: cart })
         });
 
         if (response.ok) {
             const result = await response.json();
             alert(`Order placed successfully! Order ID: ${result.orderId}`);
-            cart = []; // Clear the cart after a successful order
+            cart = [];
             updateCartDisplay();
         } else {
             console.error('Failed to process order:', response.statusText);
@@ -234,43 +231,35 @@ async function processOrder() {
     }
 }
 
-// Function to handle "Log Out" button click
 function logOut() {
     alert('Log out functionality coming soon!');
 }
 
-// Fetch orders and their line items from Salesforce
 async function fetchOrders() {
     try {
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${ACCESS_TOKEN}`
+                'Authorization': `Bearer ${window.ACCESS_TOKEN}`
             }
         });
 
         if (response.ok) {
             const rawData = await response.text();
             console.log("Raw Orders Response:", rawData);
-
             let data = JSON.parse(rawData);
             console.log("Type of data:", typeof data);
             console.log("RESPONSE FROM SALESFORCE:", data);
 
-            // Ensure data is an array
             if (!Array.isArray(data)) {
-                //console.error("Fetched data is not an array", data);
-
-                // Handle cases where the array might be wrapped or stringified
                 if (typeof data === "string") {
-                    data = JSON.parse(data); // Parse again if it's a string
+                    data = JSON.parse(data);
                 } else if (data.orders) {
-                    data = data.orders; // Unwrap if it's wrapped in an object
+                    data = data.orders;
                 }
             }
-
             if (Array.isArray(data)) {
-                displayOrders(data); // Pass the parsed data to the display function
+                displayOrders(data);
             } else {
                 console.error("Data is still not an array after parsing/unwrapping:", data);
             }
@@ -285,16 +274,14 @@ async function fetchOrders() {
 // Function to display orders as cards
 function displayOrders(orders) {
     const ordersContainer = document.getElementById('orders-container');
-    ordersContainer.innerHTML = ""; // Clear existing orders
+    ordersContainer.innerHTML = "";
 
-    // Check if orders is an array
     if (!Array.isArray(orders)) {
         console.error("displayOrders expects an array but got:", orders);
         return;
     }
 
     orders.forEach(order => {
-        // Calculate the total price for the order
         let totalPrice = 0;
         const lineItemsHTML = order.lineItems.map(item => {
             const productTotal = parseFloat(item.price) * parseInt(item.quantity);
@@ -307,7 +294,6 @@ function displayOrders(orders) {
             `;
         }).join("");
 
-        // Create the order card
         const orderCard = document.createElement('div');
         orderCard.style = `
             border: 1px solid #ddd;
@@ -330,6 +316,5 @@ function displayOrders(orders) {
         ordersContainer.appendChild(orderCard);
     });
 
-    // Make the orders section visible
     document.getElementById('orders-section').classList.remove('hidden');
 }
