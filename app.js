@@ -36,7 +36,7 @@ async function fetchProducts(query) {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('RESPONSE FROM SALESFORCE'+data);
+            console.log('RESPONSE FROM SALESFORCE'+ JSON.stringify(data));
             // Map the fields to display the updated structure
             return data.map(product => ({
                 id: product.Name,
@@ -91,7 +91,7 @@ async function fetchProductsByCategory(category) {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('RESPONSE FROM SALESFORCE'+data);
+            console.log('RESPONSE FROM SALESFORCE'+ JSON.stringify(data));
             // Map the fields to display the updated structure
             const filteredProducts = data.map(product => ({
                 id: product.Name,
