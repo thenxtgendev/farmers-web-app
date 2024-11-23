@@ -14,8 +14,7 @@ async function refreshToken() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: params,
-            mode: 'no-cors'
+            body: params
         });
 
         if (response.ok) {
