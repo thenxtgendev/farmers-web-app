@@ -1,0 +1,94 @@
+@RestResource(urlMapping='/processOrder')
+global with sharing class OrderService {
+    @HttpGet
+    global static String getOrders() {
+        List<Order__c> orders = [SELECT Id, Name,
+                                        (SELECT Product_Name__c, Quantity__c, Price__c
+                                         FROM Product_Line_Items__r)
+                                 FROM Order__c];
+
+        List<OrderWrapper> result = new List<OrderWrapper>();
+        for (Order__c order : orders) {
+            OrderWrapper orderWrapper = new OrderWrapper();
+            orderWrapper.orderNumber = order.Name;
+
+            for (Product_Line_Item__c item : order.Product_Line_Items__r) {
+                LineItemWrapper lineItem = new LineItemWrapper();
+                lineItem.name = item.Product_Name__c;
+                lineItem.quantity = item.Quantity__c;
+                lineItem.price = item.Price__c;
+                orderWrapper.lineItems.add(lineItem);
+            }
+            result.add(orderWrapper);
+        }
+
+        return JSON.serialize(result);
+    }
+
+    @HttpPost
+    global static String processOrder() {
+        try {
+            RestRequest req = RestContext.request;
+            String requestBody = req.requestBody.toString();
+            Map<String, Object> orderData = (Map<String, Object>) JSON.deserializeUntyped(requestBody);
+
+            Order__c newOrder = new Order__c();
+            newOrder.Status__c = 'New';
+            insert newOrder;
+
+            Object itemsRaw = orderData.get('items');
+            if (itemsRaw instanceof List<Object>) {
+                List<Object> itemsList = (List<Object>) itemsRaw;
+
+                List<Product_Line_Item__c> lineItems = new List<Product_Line_Item__c>();
+                for (Object rawItem : itemsList) {
+                    if (rawItem instanceof Map<String, Object>) {
+                        Map<String, Object> item = (Map<String, Object>) rawItem;
+
+                        Product_Line_Item__c lineItem = new Product_Line_Item__c();
+                        lineItem.Order__c = newOrder.Id; // Parent Order ID
+                        lineItem.Product_Name__c = (String) item.get('name');
+
+                        if (item.containsKey('quantity')) {
+                            lineItem.Quantity__c = String.valueOf(item.get('quantity'));
+                        }
+                        if (item.containsKey('price')) {
+                            lineItem.Price__c = String.valueOf(item.get('price'));
+                        }
+
+                        lineItems.add(lineItem);
+                    }
+                }
+
+                if (!lineItems.isEmpty()) {
+                    insert lineItems;
+                }
+            }
+
+            return JSON.serialize(new Map<String, Object>{
+                'success' => true,
+                'orderId' => newOrder.Id
+            });
+        } catch (Exception e) {
+            RestResponse res = RestContext.response;
+            res.statusCode = 500;
+            return JSON.serialize(new Map<String, Object>{
+                'success' => false,
+                'error' => e.getMessage()
+            });
+        }
+    }
+
+    // Wrapper class for Order
+    public class OrderWrapper {
+        public String orderNumber;
+        public List<LineItemWrapper> lineItems = new List<LineItemWrapper>();
+    }
+
+    // Wrapper class for Line Items
+    public class LineItemWrapper {
+        public String name;
+        public String quantity;
+        public String price;
+    }
+}

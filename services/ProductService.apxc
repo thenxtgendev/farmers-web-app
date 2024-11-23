@@ -1,0 +1,12 @@
+@RestResource(urlMapping='/products')
+global with sharing class ProductService {
+    @HttpGet
+    global static List<Product__c> getProducts() {
+        String query = RestContext.request.params.get('query');
+        List<Product__c> products = [SELECT Id, Name, Product_Name__c, Category__c, Price__c, Quantity__c
+                                     FROM Product__c
+                                     WHERE Product_Name__c LIKE :('%' + query + '%')
+                                     OR Category__c LIKE :('%' + query + '%')];
+        return products;
+    }
+}
