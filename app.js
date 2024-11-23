@@ -22,7 +22,7 @@ async function fetchSearchResults(query) {
 }
 
 //Salesforce access token
-const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQJ8aFxR4xm_y1RPIlbp.ZZbUd.WQFlJQEOTcPPFFV2detiGi1UabgAhFwJYZunTUhvDYtKPIRo9z_nAZlYPYX_ZmQKRN';
+const ACCESS_TOKEN = '00DNS000003FCNJ!AQEAQDgd5y503b4c.8u0RV_0gykei.nK4DOwZ1M4OKhRUnA6ljEzYZ3s3fVx5cte5dcboMJ1bTno17.eF.rZiC._sjyCxT_7';
 
 // Fetch products from Salesforce API
 async function fetchProducts(query) {
