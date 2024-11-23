@@ -36,6 +36,7 @@ async function fetchProducts(query) {
 
         if (response.ok) {
             const data = await response.json();
+            console.log('RESPONSE FROM SALESFORCE'+data);
             // Map the fields to display the updated structure
             return data.map(product => ({
                 id: product.Name,
@@ -90,6 +91,7 @@ async function fetchProductsByCategory(category) {
 
         if (response.ok) {
             const data = await response.json();
+            console.log('RESPONSE FROM SALESFORCE'+data);
             // Map the fields to display the updated structure
             const filteredProducts = data.map(product => ({
                 id: product.Name,
@@ -207,6 +209,7 @@ async function processOrder() {
 
     try {
         // POST request to Salesforce
+        console.log('REQUEST FROM APP CART'+JSON.stringify({ items: cart }));
         const response = await fetch('https://dttl-c-dev-ed.develop.my.salesforce.com/services/apexrest/processOrder', {
             method: 'POST',
             headers: {
@@ -231,12 +234,6 @@ async function processOrder() {
     }
 }
 
-
-// Function to handle "Orders" button click
-function viewOrders() {
-    alert('Orders functionality coming soon!');
-}
-
 // Function to handle "Log Out" button click
 function logOut() {
     alert('Log out functionality coming soon!');
@@ -258,7 +255,7 @@ async function fetchOrders() {
 
             let data = JSON.parse(rawData);
             console.log("Type of data:", typeof data);
-            console.log("Parsed Orders Data:", data);
+            console.log("RESPONSE FROM SALESFORCE:", data);
 
             // Ensure data is an array
             if (!Array.isArray(data)) {
